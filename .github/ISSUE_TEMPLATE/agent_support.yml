@@ -1,0 +1,16 @@
+name: Request a new agent
+description: Ask for support for another AI coding tool.
+labels: [new-agent]
+body:
+  - type: input
+    id: agent
+    attributes:
+      label: Which tool?
+      placeholder: "Cursor, Cline, Aider, Windsurf, Copilot CLI..."
+    validations:
+      required: true
+  - type: textarea
+    id: logs
+    attributes:
+      label: Where does it save session history?
+      description: "A folder path and the file type (JSON, JSONL, SQLite...). A tiny sample with private details removed is the most helpful thing you can add."

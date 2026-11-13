@@ -1,0 +1,35 @@
+name: Bug report
+description: Something did not work, or a warning was wrong.
+labels: [bug]
+body:
+  - type: textarea
+    id: what
+    attributes:
+      label: What happened?
+      description: What did you run, what did you expect, and what did you get?
+    validations:
+      required: true
+  - type: input
+    id: agent
+    attributes:
+      label: Which agent and version?
+      placeholder: "Claude Code 2.x, Codex CLI 0.x, Gemini CLI, OpenCode..."
+    validations:
+      required: true
+  - type: input
+    id: version
+    attributes:
+      label: Output of `agent-receipts --version` and your system
+      placeholder: "agent-receipts 0.1.0, macOS 15, Python 3.12"
+    validations:
+      required: true
+  - type: textarea
+    id: doctor
+    attributes:
+      label: Output of `agent-receipts doctor`
+      render: text
+  - type: textarea
+    id: more
+    attributes:
+      label: Anything else
+      description: "Please remove secrets and private code from anything you paste. Re-run with AGENT_RECEIPTS_DEBUG=1 to see the full error."

@@ -1,0 +1,1 @@
+{"id": "prt_0003", "type": "tool", "tool": "read", "callID": "c3", "state": {"status": "completed", "input": {"filePath": "/home/dev/shop-api/.env"}, "time": {"start": 1794474036000, "end": 1794474037000}, "output": "ok"}}

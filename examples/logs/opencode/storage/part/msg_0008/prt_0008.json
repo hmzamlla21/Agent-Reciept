@@ -1,0 +1,1 @@
+{"id": "prt_0008", "type": "tool", "tool": "bash", "callID": "c8", "state": {"status": "completed", "input": {"command": "export API_KEY=sk-live-EXAMPLE1234567890abcdefghij && python scripts/ping.py"}, "time": {"start": 1794474108000, "end": 1794474109000}, "output": "ok"}}

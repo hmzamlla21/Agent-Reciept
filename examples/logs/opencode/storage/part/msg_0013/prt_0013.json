@@ -1,0 +1,1 @@
+{"id": "prt_0013", "type": "tool", "tool": "bash", "callID": "c13", "state": {"status": "error", "input": {"command": "pytest -q tests/test_pricing.py"}, "time": {"start": 1794474148000, "end": 1794474149000}, "error": "FAILED tests/test_pricing.py::test_discount - AssertionError"}}

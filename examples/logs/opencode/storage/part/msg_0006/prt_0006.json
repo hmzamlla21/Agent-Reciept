@@ -1,0 +1,1 @@
+{"id": "prt_0006", "type": "tool", "tool": "bash", "callID": "c6", "state": {"status": "completed", "input": {"command": "pip install requests"}, "time": {"start": 1794474084000, "end": 1794474085000}, "output": "ok"}}

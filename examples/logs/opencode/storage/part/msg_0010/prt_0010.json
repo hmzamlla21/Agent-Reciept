@@ -1,0 +1,1 @@
+{"id": "prt_0010", "type": "tool", "tool": "bash", "callID": "c10", "state": {"status": "completed", "input": {"command": "rm -rf build dist"}, "time": {"start": 1794474118000, "end": 1794474119000}, "output": "ok"}}
