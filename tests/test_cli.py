@@ -37,7 +37,7 @@ class Cli(unittest.TestCase):
             log.parent.mkdir()
             line = {"type": "user", "uuid": "1", "sessionId": "s", "cwd": "/p", "timestamp": "2026-11-12T09:00:00Z",
                     "message": {"role": "user", "content": "<img src=x onerror=alert(1)> <script>boom()</script>"}}
-            log.write_text(json.dumps(line) + "\n")
+            log.write_text(json.dumps(line) + "\n", encoding="utf-8")
             code, out, _ = helpers.run_cli("--agent", "claude-code", "--dir", tmp, "--format", "html", "-o", "-")
             self.assertEqual(code, 0)
             self.assertNotIn("<script>boom", out)
@@ -50,7 +50,7 @@ class Cli(unittest.TestCase):
             code, out, err = helpers.run_cli(*base(), "-o", str(target))
             self.assertEqual(code, 0, err)
             self.assertEqual(out, "")
-            self.assertTrue(target.read_text().startswith("# Agent Receipt"))
+            self.assertTrue(target.read_text(encoding="utf-8").startswith("# Agent Receipt"))
 
     def test_json_fields(self):
         _, out, _ = helpers.run_cli(*base("codex"), "--format", "json", "-o", "-")

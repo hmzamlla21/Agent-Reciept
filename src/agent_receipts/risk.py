@@ -69,11 +69,17 @@ def split_segments(command: str) -> List[str]:
     return [s.strip() for s in segments if s.strip()]
 
 
+_WINDOWS_PATH = re.compile(r"(?:^|[\s'\"])[A-Za-z]:\\|\s\.\.?\\|\s\\\\")
+
+
 def tokenize(segment: str) -> List[str]:
+    # shlex in its normal mode treats a backslash as an escape and would turn C:\build into C:build.
+    posix = not _WINDOWS_PATH.search(segment)
     try:
-        return shlex.split(segment, posix=True)
+        tokens = shlex.split(segment, posix=posix)
     except ValueError:
         return segment.split()
+    return tokens if posix else [t.strip("'\"") for t in tokens]
 
 
 _ENV_ASSIGN = re.compile(r"^[A-Za-z_][A-Za-z0-9_]*=")
@@ -201,7 +207,13 @@ def check_path(path: str, cwd: Optional[str], kind: str) -> List[Risk]:
 # Commands
 # ---------------------------------------------------------------------------
 
-_PIPE_TO_SHELL = re.compile(r"\b(?:curl|wget|fetch)\b[^|;&\n]*\|\s*(?:sudo\s+)?(?:ba|z|da|k)?sh\b")
+_PIPE_TO_SHELL = re.compile(
+    r"\b(?:curl|wget|fetch)\b[^|;&\n]*\|\s*(?:sudo\s+)?(?:ba|z|da|k)?sh\b"  # curl ... | sh
+    r"|\b(?:irm|iwr|invoke-restmethod|invoke-webrequest|curl|wget)\b[^|;&\n]*\|\s*(?:iex|invoke-expression)\b"  # irm ... | iex
+    r"|\b(?:iex|invoke-expression)\b\s*\(?\s*\(?\s*(?:irm|iwr|invoke-restmethod|invoke-webrequest)\b",  # iex (irm ...)
+    re.IGNORECASE,
+)
+_WIN_DELETE = {"remove-item", "ri", "del", "erase", "rd", "rmdir"}
 _SQL_DROP = re.compile(r"\b(?:drop\s+(?:table|database|schema)|truncate\s+table)\b", re.I)
 _SQL_DELETE_ALL = re.compile(r"\bdelete\s+from\s+[\w.\"`]+(?!.*\bwhere\b)", re.I)
 _SECRET_ECHO = re.compile(r"\$\{?[A-Za-z0-9_]*(?:KEY|TOKEN|SECRET|PASSWORD|PASSWD)[A-Za-z0-9_]*", re.I)
@@ -297,6 +309,7 @@ def _analyze_segment(tokens: List[str], risks: List[Risk], depth: int) -> None:
     args = tokens[1:]
     flags = [a for a in args if a.startswith("-")]
     plain = [a for a in args if not a.startswith("-")]
+    lowflags = [a.lower() for a in args if len(a) > 1 and a[:1] in ("-", "/")]
 
     if prog in _SHELLS and depth < 3:
         for idx, item in enumerate(args):
@@ -312,6 +325,14 @@ def _analyze_segment(tokens: List[str], risks: List[Risk], depth: int) -> None:
         if any(p.lower() in _DANGEROUS_RM_TARGETS for p in plain) and recursive:
             _risk(risks, HIGH, "rm-dangerous", f"Deleted a very broad target with rm -r: {shown}")
         elif recursive:
+            _risk(risks, HIGH, "rm-recursive", f"Deleted folders and everything inside them: {shown}")
+        else:
+            _risk(risks, MEDIUM, "rm", f"Deleted files: {shown}")
+    elif prog.lower() in _WIN_DELETE and not (prog.lower() == "rmdir" and "/s" not in lowflags):
+        # Windows: PowerShell Remove-Item, and cmd's del / rd / rmdir /s
+        recursive = any(f in ("-recurse", "-r", "/s") for f in lowflags)
+        shown = " ".join(p for p in plain if not p.startswith("/"))[:80]
+        if recursive:
             _risk(risks, HIGH, "rm-recursive", f"Deleted folders and everything inside them: {shown}")
         else:
             _risk(risks, MEDIUM, "rm", f"Deleted files: {shown}")

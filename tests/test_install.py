@@ -58,7 +58,7 @@ class Install(unittest.TestCase):
         for agent, path in self.files().items():
             code, _, _ = helpers.run_cli("install", agent)
             self.assertEqual(code, 0)
-            self.assertIn(f"--agent {agent}", path.read_text(), agent)
+            self.assertIn(f"--agent {agent}", path.read_text(encoding="utf-8"), agent)
 
     def test_running_twice_is_safe(self):
         (self.home / ".codex").mkdir()
@@ -70,14 +70,14 @@ class Install(unittest.TestCase):
     def test_your_own_edits_are_protected(self):
         helpers.run_cli("install", "claude-code")
         path = self.files()["claude-code"]
-        path.write_text("my own command")
+        path.write_text("my own command", encoding="utf-8")
         code, out, _ = helpers.run_cli("install", "claude-code")
         self.assertEqual(code, 1)
-        self.assertEqual(path.read_text(), "my own command")
+        self.assertEqual(path.read_text(encoding="utf-8"), "my own command")
         self.assertIn("--force", out)
         code, _, _ = helpers.run_cli("install", "claude-code", "--force")
         self.assertEqual(code, 0)
-        self.assertIn("agent-receipts", path.read_text())
+        self.assertIn("agent-receipts", path.read_text(encoding="utf-8"))
 
     def test_dry_run_changes_nothing(self):
         code, out, _ = helpers.run_cli("install", "gemini", "--dry-run")
@@ -92,7 +92,7 @@ class Install(unittest.TestCase):
         self.assertEqual(code, 0)
         self.assertFalse(path.exists())
         helpers.run_cli("install", "codex")
-        path.write_text("edited by me")
+        path.write_text("edited by me", encoding="utf-8")
         helpers.run_cli("install", "codex", "--uninstall")
         self.assertTrue(path.exists())  # not ours any more, so it is kept
 

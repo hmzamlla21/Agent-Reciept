@@ -121,7 +121,7 @@ class Robustness(unittest.TestCase):
             proj = Path(tmp) / "proj"
             proj.mkdir()
             target = proj / "s.jsonl"
-            target.write_text(src.read_text() + "{not json\n\n[1,2]\n\"x\"\n" + '{"type":"assistant","message":', encoding="utf-8")
+            target.write_text(src.read_text(encoding="utf-8") + "{not json\n\n[1,2]\n\"x\"\n" + '{"type":"assistant","message":', encoding="utf-8")
             clean = len(adapters.get("claude-code").load(src).actions)
             s = adapters.get("claude-code").load(target)
             self.assertTrue(any("could not be read" in w for w in s.warnings))
@@ -130,16 +130,16 @@ class Robustness(unittest.TestCase):
     def test_empty_and_odd_files_do_not_crash(self):
         with tempfile.TemporaryDirectory() as tmp:
             empty = Path(tmp) / "e.jsonl"
-            empty.write_text("")
+            empty.write_text("", encoding="utf-8")
             for agent in ("claude-code", "codex"):
                 s = adapters.get(agent).load(empty)
                 r = build(s)
                 self.assertEqual(r["summary"]["actions"], 0)
             odd = Path(tmp) / "session-x.json"
-            odd.write_text(json.dumps({"sessionId": "a", "messages": [None, 5, {"type": "gemini", "toolCalls": "nope"}]}))
+            odd.write_text(json.dumps({"sessionId": "a", "messages": [None, 5, {"type": "gemini", "toolCalls": "nope"}]}), encoding="utf-8")
             self.assertEqual(build(adapters.get("gemini").load(odd))["summary"]["actions"], 0)
             bad = Path(tmp) / "session-y.json"
-            bad.write_text("{oops")
+            bad.write_text("{oops", encoding="utf-8")
             with self.assertRaises(AdapterError):
                 adapters.get("gemini").load(bad)
 

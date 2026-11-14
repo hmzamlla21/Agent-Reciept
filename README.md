@@ -15,6 +15,8 @@ commands it ran, files it changed, risky actions, and whether the tests really p
 
 Works with **Claude Code · Codex CLI · Gemini CLI · OpenCode**
 
+[**Website**](https://hmzamlla21.github.io/agent-reciept/) · [**Live example receipt**](https://hmzamlla21.github.io/agent-reciept/example.html)
+
 <img src="docs/receipt-example.png" alt="An Agent Receipt: a list of risky actions, a failed test run, and the agent claiming everything passes" width="640">
 
 </div>

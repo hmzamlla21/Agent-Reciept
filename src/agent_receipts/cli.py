@@ -279,7 +279,9 @@ def cmd_show(args: argparse.Namespace) -> int:
         try:
             if target.parent and not target.parent.exists():
                 target.parent.mkdir(parents=True, exist_ok=True)
-            target.write_text(content, encoding="utf-8")
+            # Always UTF-8 with plain "\n" line endings, so a receipt reads the same on every computer.
+            with open(str(target), "w", encoding="utf-8", newline="\n") as handle:
+                handle.write(content)
         except OSError as exc:
             _err(f"Could not save to {target}: {exc.strerror or exc}")
             return EXIT_ERROR

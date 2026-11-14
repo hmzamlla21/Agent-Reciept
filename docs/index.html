@@ -1,0 +1,98 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Agent Receipts: see what your AI coder really did</title>
+<meta name="description" content="A free, offline tool that turns an AI coding agent's session log into a plain-English receipt: commands run, files changed, risky actions, and whether tests really passed.">
+<meta property="og:title" content="Agent Receipts">
+<meta property="og:description" content="See what your AI coding agent really did. Free, offline, no sign-up.">
+<meta property="og:type" content="website">
+<meta property="og:image" content="https://hmzamlla21.github.io/agent-reciept/receipt-example.png">
+<meta name="twitter:card" content="summary_large_image">
+<style>
+:root{--bg:#fff;--fg:#14171f;--muted:#566070;--card:#f4f6fa;--line:#dfe3ea;--accent:#0b6bcb;--accent-fg:#fff;--code:#0f1420;--code-fg:#e8edf7}
+@media(prefers-color-scheme:dark){:root{--bg:#0d1017;--fg:#e8ebf2;--muted:#9aa4b5;--card:#161b26;--line:#262d3b;--accent:#5aa8ff;--accent-fg:#06121f;--code:#080b11;--code-fg:#e8edf7}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--fg);font:17px/1.6 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
+.wrap{max-width:860px;margin:0 auto;padding:0 16px}
+header{padding:56px 0 24px}
+h1{font-size:clamp(2rem,6vw,3.2rem);line-height:1.15;margin:0 0 12px}
+h2{font-size:1.6rem;margin:48px 0 12px}
+p.lead{font-size:1.2rem;color:var(--muted);margin:0 0 24px}
+.btn{display:inline-block;padding:11px 20px;border-radius:8px;background:var(--accent);color:var(--accent-fg);font-weight:600;text-decoration:none;margin:0 8px 8px 0}
+.btn.alt{background:transparent;color:var(--accent);border:1px solid var(--accent)}
+img.hero{width:100%;height:auto;border:1px solid var(--line);border-radius:10px;margin-top:24px}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:14px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:16px}
+.card h3{margin:0 0 6px;font-size:1.05rem}
+.card p{margin:0;color:var(--muted);font-size:.97rem}
+ol.steps{padding-left:22px}
+ol.steps li{margin-bottom:18px}
+.code{position:relative;background:var(--code);color:var(--code-fg);border-radius:8px;padding:12px 76px 12px 14px;margin:8px 0;font:14px/1.5 ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;overflow-x:auto;white-space:pre}
+.code button{position:absolute;top:8px;right:8px;background:#2a3347;color:#fff;border:0;border-radius:6px;padding:4px 10px;font-size:13px;cursor:pointer}
+table{border-collapse:collapse;width:100%;font-size:.97rem}
+td,th{border-bottom:1px solid var(--line);padding:8px;text-align:left}
+footer{margin:56px 0 40px;color:var(--muted);font-size:.95rem;border-top:1px solid var(--line);padding-top:18px}
+a{color:var(--accent)}
+</style>
+</head>
+<body>
+<div class="wrap">
+<header>
+<h1>See what your AI coder <em>really</em> did.</h1>
+<p class="lead">Agent Receipts reads your AI coding agent's session log and gives you a plain-English receipt: the commands it ran, the files it changed, anything risky, and whether the tests <em>really</em> passed. Free. Offline. No sign-up.</p>
+<a class="btn" href="#install">Install in 2 minutes</a>
+<a class="btn alt" href="example.html">See a live receipt</a>
+<a class="btn alt" href="https://github.com/hmzamlla21/agent-reciept">View on GitHub</a>
+<img class="hero" src="receipt-example.png" alt="Example receipt showing commands run, files changed, a risk warning and a test claim that does not match the log">
+</header>
+
+<h2>Why you want this</h2>
+<div class="grid">
+<div class="card"><h3>Catch "tests pass" that isn't true</h3><p>If the agent says the tests passed but the log says they failed or never ran, you get a warning.</p></div>
+<div class="card"><h3>Spot risky actions</h3><p>Deleted folders, force pushes, <code>curl | sh</code>, edits to secrets and more are flagged, in plain words.</p></div>
+<div class="card"><h3>Private by design</h3><p>Runs on your computer. Nothing is uploaded. Secrets in the log are hidden in the receipt.</p></div>
+<div class="card"><h3>Works with your agent</h3><p>Claude Code, Codex CLI, Gemini CLI and OpenCode. One command, same receipt.</p></div>
+</div>
+
+<h2 id="install">Install</h2>
+<ol class="steps">
+<li><strong>Install Python 3.9 or newer</strong> from <a href="https://www.python.org/downloads/">python.org</a> if you do not have it. Check with:
+<div class="code"><span>python3 --version</span><button type="button">Copy</button></div></li>
+<li><strong>Install pipx</strong> (it installs command-line tools safely):
+<div class="code"><span>python3 -m pip install --user pipx &amp;&amp; python3 -m pipx ensurepath</span><button type="button">Copy</button></div>
+Then close and reopen your terminal. On Windows use <code>py</code> instead of <code>python3</code>.</li>
+<li><strong>Install Agent Receipts:</strong>
+<div class="code"><span>pipx install git+https://github.com/hmzamlla21/agent-reciept.git</span><button type="button">Copy</button></div></li>
+<li><strong>Get your first receipt:</strong>
+<div class="code"><span>agent-receipts</span><button type="button">Copy</button></div>
+<strong>Optional:</strong> add a <code>/receipt</code> command inside your agent:
+<div class="code"><span>agent-receipts install</span><button type="button">Copy</button></div></li>
+</ol>
+<p>Stuck? Run <code>agent-receipts doctor</code>. It checks your setup and tells you what to fix. The full guide is in the <a href="https://github.com/hmzamlla21/agent-reciept#readme">README</a>.</p>
+
+<h2>Supported agents</h2>
+<table>
+<tr><th>Agent</th><th>Where it reads logs</th></tr>
+<tr><td>Claude Code</td><td><code>~/.claude/projects</code></td></tr>
+<tr><td>Codex CLI</td><td><code>~/.codex/sessions</code></td></tr>
+<tr><td>Gemini CLI</td><td><code>~/.gemini/tmp</code></td></tr>
+<tr><td>OpenCode</td><td><code>~/.local/share/opencode/storage</code></td></tr>
+</table>
+
+<footer>
+MIT licensed. Made by Hamza. <a href="https://github.com/hmzamlla21/agent-reciept">Source on GitHub</a> · <a href="https://github.com/hmzamlla21/agent-reciept/issues">Report a bug</a>
+</footer>
+</div>
+<script>
+document.querySelectorAll('.code button').forEach(function(b){
+  b.addEventListener('click',function(){
+    var t=b.parentNode.querySelector('span').textContent;
+    var done=function(){b.textContent='Copied';setTimeout(function(){b.textContent='Copy'},1500)};
+    try{navigator.clipboard.writeText(t).then(done,done)}catch(e){}
+  });
+});
+</script>
+</body>
+</html>

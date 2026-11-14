@@ -1,0 +1,3 @@
+# Keep the same line endings on every computer (stops Windows from changing files)
+* text=auto eol=lf
+*.png binary
